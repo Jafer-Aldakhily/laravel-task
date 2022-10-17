@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("book_title");
             $table->string("book_description");
-            $table->string("book_author");
+            $table->foreignId("author_id")->constrained()->onDelete("cascade");
             $table->longText("book_image");
             $table->timestamps();
         });

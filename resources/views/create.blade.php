@@ -30,8 +30,12 @@
     </div>
     <div class="mb-3">
       <label class="form-label">Author</label>
-      <input type="text" class="form-control" name="author">
-      @error('author')
+      <select name="author_id" class="form-control">
+        @foreach ($authors as $author)
+            <option value="{{ $author->id }}">{{ $author->name }}</option>
+        @endforeach
+      </select>
+      @error('author_id')
       <div class="alert alert-danger my-2">
           <small>{{ $message }}</small>
       </div>

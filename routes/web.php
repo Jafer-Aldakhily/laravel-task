@@ -18,3 +18,8 @@ Route::get('/', [BookController::class, "index"]);
 
 
 Route::resource("book", BookController::class);
+
+
+Route::get("/oldest-sort", [BookController::class, "oldestSort"]);
+
+Route::get("/author/{id}", [BookController::class, "authorsBook"]);

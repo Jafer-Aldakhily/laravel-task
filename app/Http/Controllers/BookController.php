@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -14,7 +16,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view("index", ["books" => Book::all()]);
+        $books = Book::latest()->filter(request(["search"]))->get();
+        return view("index", ["books" => $books]);
     }
 
     /**
@@ -24,7 +27,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view("create");
+        $authors = Author::all();
+        return view("create", compact("authors"));
     }
 
     /**
@@ -35,10 +39,11 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             "title" => "required",
             "description" => "required",
-            "author" => "required",
+            "author_id" => "required",
             "image" => "required|image|mimes:png,jpg|max:2048",
         ]);
 
@@ -48,7 +53,7 @@ class BookController extends Controller
         Book::create([
             "book_title" => $request->title,
             "book_description" => $request->description,
-            "book_author" => $request->author,
+            "author_id" => $request->author_id,
             "book_image" => $imageName
         ]);
 
@@ -95,7 +100,7 @@ class BookController extends Controller
             Book::where("id", $book->id)->update([
                 "book_title" => $request->title,
                 "book_description" => $request->description,
-                "book_author" => $request->author,
+                "author_id" => $request->author,
                 "book_image" => $imageName
             ]);
             $oldImagePath = public_path("./images/$oldImage");
@@ -107,7 +112,7 @@ class BookController extends Controller
             Book::where("id", $book->id)->update([
                 "book_title" => $request->title,
                 "book_description" => $request->description,
-                "book_author" => $request->author
+                "author_id" => $request->author
             ]);
             return redirect('/')->with("success", "updated record successfully");
         }
@@ -123,5 +128,20 @@ class BookController extends Controller
     {
         $book->delete();
         return redirect('/')->with("success", "Deleted record successfully");
+    }
+
+
+    public function oldestSort()
+    {
+        $books = DB::table('books')->orderBy("created_at", 'asc')->get();
+        return view("index", ["books" => $books]);
+    }
+
+
+    public function authorsBook($id)
+    {
+        $author = Author::findOrFail($id);
+        $books = $author->books;
+        return view("author", compact("books", "author"));
     }
 }

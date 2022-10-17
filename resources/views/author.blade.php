@@ -1,31 +1,15 @@
 @extends('master')
-
-
-
-
 @section('content')
-@if (session()->has("success"))
-<div class="row mt-3">
-  <div x-data="{show:true}" 
-  x-init="setTimeout(() => show = false,2000)"
-  x-show="show" class="alert alert-success float-end">{{ session()->get("success") }}</div>
-</div>
-@endif
 
-<div class="filter">
-  <form action="/" class="d-inline">
-  <input type="text" name="search" placeholder="Search using title" 
-  class="form-control w-25 mt-3 mb-1 d-inline">
-  <button type="submit" class="btn btn-success">Search</button>
-  </form>
-</div>
 
-<div class="sort">
-  <a href="/oldest-sort" class="btn btn-info text-white d-inline float-end mx-1">Oldest</a>
-  <a href="/book" class="btn btn-dark text-white d-inline float-end mx-1">Newest</a>
-</div>
 
 <a href="/book/create" class="btn btn-primary my-3">Add New</a>
+<a href="/" class="btn btn-success my-3">Back to Home</a>
+
+
+<h1>Autor Name : {{ $author->name }}</h1>
+<h2>Nationality : {{ $author->nationality }}</h2>
+<h3>Email : {{ $author->email }}</h3>
 <div class="row">
 @foreach ($books as $book)
     <div class="col-md-4 my-3">
